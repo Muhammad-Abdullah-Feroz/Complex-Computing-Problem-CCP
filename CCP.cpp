@@ -87,6 +87,65 @@ void recurrenceTreeExpansion(int a, int b, double d)
     }
 }
 
+void decreasingSingleRecursion(){
+    int a,b,d;
+    cout<<endl<<"Decreasing Single Recursion Solver:"<<endl;
+    cout<<"----------------------------------"<<endl;
+    cout<<"T(n) = aT(n-b) + O(n^d)"<<endl;
+    cout<<"Enter the values of a, b, and d:"<<endl;
+    cin>>a>>b>>d;
+    if(a<1 || b<1 || d<0){
+        cout<<endl<<"Invalid values for a, b, or d."<<endl;
+        return;
+    }
+
+    cout<<endl<<"Analyzing T(n) = "<<a<<"T(n-"<<b<<") + O(n^"<<d<<")"<<endl;
+
+    if (a==1){
+        cout<<endl<<"T(n) = O( n^"<<d+1<<" )"<<endl;
+    }else if(a > 1){
+        cout<<endl<<"T(n) = O( n^"<<d<<" * "<<a<<"^(n/"<<b<<") )"<<endl;
+    }else{
+        cout<<endl<<"Invalid case."<<endl;
+    }
+}
+
+void decreasingDoubleRecursion(){
+    // Estimated - Not 100% accurate
+    int a1,b1,a2,b2,d;
+    cout<<endl<<"Decreasing Double Recursion Solver:"<<endl;
+    cout<<"-----------------------------------"<<endl;
+    cout<<"T(n) = a1.T(n-b1) + a2.T(n-b2) + O(n^d)"<<endl;
+    cout<<"Enter the values of a1, b1, a2, b2, and d:"<<endl;
+    cin>>a1>>b1>>a2>>b2>>d;
+    if(a1<1 || b1<1 || a2<1 || b2<1 || d<0){
+        cout<<endl<<"Invalid values for a1, b1, a2, b2, or d."<<endl;
+        return;
+    }
+
+    cout << endl << "Analyzing T(n) = " << a1 << "T(n-" << b1 << ") + " << a2 << "T(n-" << b2 << ") + O(n^" << d << ")" << endl;
+
+    if (a1 == 1 && a2 == 1) {
+        cout << "=> T(n) = O(n^"<<(d + 1)<<")" << endl;
+    } 
+    else if (a1 > 1 || a2 > 1) {
+        bool r1 = true;
+        if (log(a1)/b1 < log(a2)/b2){
+            r1 = false;
+        }
+        if (r1){
+            cout << "T(n) = O(n^"<<d<<" * "<<a1<<"^ n/"<<b1<<")" << endl;
+        }else{
+            cout << "T(n) = O(n^"<<d<<" * "<<a2<<"^ n/"<<b2<<")" << endl;
+        }
+    }
+    // If both a1 and a2 are 1, but d > 0, we still get polynomial complexity
+    else {
+        cout << "Unexpected case: a1 and a2 must both be >= 1." << endl;
+    }
+
+}
+
 void recurrenceTreeSolver(int a, int b, double d)
 {
     cout << "\nRecurrence Tree Solver:\n";
@@ -105,7 +164,7 @@ int main()
     do
     {
         cout << "\nChoose Recurrence Type to Solve:\n";
-        cout << "1. Linear Recursion\n";
+        cout << "1. Decreasing Recursion\n";
         cout << "2. Dividing Recursion\n";
         cout << "3. Exit\n";
         cout << "Enter your choice: ";
@@ -114,22 +173,24 @@ int main()
         switch (choice)
         {
         case 1:
-            // Linear Recursion Menu
-            cout << "\nLinear Recursion Options:\n";
+            // Decreasing Recursion Menu
+            cout << "\nDecreasing Recursion Options:\n";
             cout << "1. Single\n";
             cout << "2. Double\n";
             cout << "Enter your choice: ";
-            int linearChoice;
-            cin >> linearChoice;
+            int decreasingChoice;
+            cin >> decreasingChoice;
 
-            switch (linearChoice)
+            switch (decreasingChoice)
             {
             case 1:
-                cout << "Linear Recursion - Single selected.\n";
+                cout << "Decreasing Recursion - Single selected.\n";
                 // Call Single Recursion Solver (implement as needed)
+                decreasingSingleRecursion();
                 break;
             case 2:
-                cout << "Linear Recursion - Double selected.\n";
+                cout << "Decreasing Recursion - Double selected.\n";
+                decreasingDoubleRecursion();
                 // Call Double Recursion Solver (implement as needed)
                 break;
             default:
