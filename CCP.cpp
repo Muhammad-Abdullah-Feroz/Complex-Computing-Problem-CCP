@@ -9,8 +9,33 @@ double logBase(double a, double b)
     return log(a) / log(b);
 }
 
-void masterTheorem(int a, int b, double d)
+void recurrenceTreeExpansion(int a, int b, double d)
 {
+    cout << "\nRecurrence Tree Expansion:\n";
+    cout << "---------------------------\n";
+
+    int depth = 5; // Number of expansion steps to show
+    for (int i = 0; i < depth; i++)
+    {
+        cout << "T(n) = " << a << "^" << i << " * T(n/" << pow(b, i) << ") + O(n^" << d << ")" << endl;
+    }
+}
+
+void masterTheorem()
+{
+    int a ,b;
+    double d;
+    cout<<endl<<"Enter values for a, b, and d:"<<endl;
+    cout<<"a = ";
+    cin>>a;
+    cout<<"b = ";
+    cin>>b;
+    cout<<"d = ";
+    cin>>d;
+    cout << endl
+         << "Analyzing T(n) = " << a << "T(n/" << b << ") + O(n^" << d << ")" << endl;
+    cout << "--------------------------------" << endl;
+    recurrenceTreeExpansion(a, b, d);
 
     cout << endl
          << "Master Theorem Analysis:" << endl;
@@ -75,17 +100,6 @@ void masterTheorem(int a, int b, double d)
     }
 }
 
-void recurrenceTreeExpansion(int a, int b, double d)
-{
-    cout << "\nRecurrence Tree Expansion:\n";
-    cout << "---------------------------\n";
-
-    int depth = 5; // Number of expansion steps to show
-    for (int i = 0; i < depth; i++)
-    {
-        cout << "T(n) = " << a << "^" << i << " * T(n/" << pow(b, i) << ") + O(n^" << d << ")" << endl;
-    }
-}
 
 void decreasingSingleRecursion(){
     int a,b,d;
@@ -222,6 +236,7 @@ int main()
                 {
                 case 1:
                     cout << "Single Division - Master Theorem selected.\n";
+                    masterTheorem();
                     // Call Master Theorem Solver (implement as needed)
                     break;
                 case 2:
