@@ -1,6 +1,7 @@
 #include <iostream>
 #include <conio.h>
 #include <cmath>
+#include <string>
 
 using namespace std;
 
@@ -160,12 +161,35 @@ void decreasingDoubleRecursion(){
 
 }
 
-void recurrenceTreeSolver(int a, int b, double d)
+void singleRecurrenceSolver()
 {
+    int a,b;
+    double d;
+    string fn;
     cout << "\nRecurrence Tree Solver:\n";
     cout << "------------------------\n";
-
+    cout<<endl<<"T(n) = aT(n/b) + f(n)"<<endl;
+    cout<<"Enter the values of a, b, and f(n):"<<endl;
+    cout<<"a = ";
+    cin>>a;
+    cout<<"b = ";
+    cin>>b;
+    cout<<"f(n):";
+    cin.ignore();
+    getline(cin, fn);
+    string allowed_fn[] = {"logn", "nlogn" , "n.(logn)^2", "(logn)^2" "n/logn"};
+    cout<<endl<<"Analyzing T(n) = "<<a<<"T(n/"<<b<<") + "<<fn<<endl;
+    cout << "--------------------------------" << endl;
     double log_b_a = logBase(a, b);
+
+    if(a < 1 || b <= 1 || d < 0)
+    {
+        cout << endl << "Invalid Values for a, b" << endl;
+        return;
+    }
+    if(a==1){
+        cout<<endl<<"T(n) = O( logn . "<<fn<<" )"<<endl;
+    }
 }
 
 int main()
@@ -241,6 +265,7 @@ int main()
                     break;
                 case 2:
                     cout << "Single Division - Recursion Tree selected.\n";
+                    singleRecurrenceSolver();
                     // Call Recursion Tree Solver (implement as needed)
                     break;
                 default:
