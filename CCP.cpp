@@ -15,14 +15,30 @@ void masterTheorem(int a, int b, double d){
     }
     double log_b_a = logBase(a, b);
     cout<<endl<<"Computed Log Base: log_"<<b<<"("<<a<<") = "<<log_b_a<<endl;
-    if (abs(log_b_a - d) < 0.000001){
-        cout<<endl<<"Case 1: T(n) = Theta( n^"<<log_b_a <<" log(n) )"<<endl;
+    if (abs(log_b_a - d) < 0.0001){
+        if(log_b_a == 1){
+            cout<<endl<<"Case 1: T(n) = Theta( n log(n) )"<<endl;
+        }
+        else{
+            cout<<endl<<"Case 1: T(n) = Theta( n^"<<log_b_a <<" log(n) )"<<endl;
+        }
     }
     else if (d < log_b_a){
-        cout<<endl<<"Case 2: T(n) = Theta( n ^ "<<log_b_a<<" )"<<endl;
+        if(log_b_a == 1){
+            cout<<endl<<"Case 2: T(n) = Theta( n )"<<endl;
+        }
+        else{
+            cout<<endl<<"Case 2: T(n) = Theta( n ^ "<<log_b_a<<" )"<<endl;
+        }
     }
     else if (d > log_b_a){
-        cout<<endl<<"Case 3: T(n) = Theta( n^"<<d<<" )"<<endl;
+        if(d == 1){
+            cout<<endl<<"Case 3: T(n) = Theta( n )"<<endl;
+        }else if (d == 0){
+            cout<<endl<<"Case 3: T(n) = Theta( 1 )"<<endl;
+        }else{
+            cout<<endl<<"Case 3: T(n) = Theta( n^"<<d<<" )"<<endl;
+        }
     }
     else{
         cout<<endl<<"Invalid case"<<endl;
