@@ -9,6 +9,9 @@ double logBase(double a, double b){
 }
 
 void masterTheorem(int a, int b, double d){
+
+    cout<<endl<<"Master Theorem Analysis:"<<endl;
+    cout<<"------------------------"<<endl;
     if (a < 1 || b <= 1 || d < 0){
         cout<<endl<<"Invalid Values for a, b, or d"<<endl;
         return;
@@ -45,14 +48,24 @@ void masterTheorem(int a, int b, double d){
     }
 }
 
+void recurrenceTreeExpansion(int a, int b, double d) {
+    cout << "\nRecurrence Tree Expansion:\n";
+    cout << "---------------------------\n";
+
+    int depth = 5; // Number of expansion steps to show
+    for (int i = 0; i < depth; i++) {
+        cout << "T(n) = " << a << "^" << i << " * T(n/" << pow(b, i) << ") + O(n^" << d << ")" << endl;
+    }
+}
+
 int main(){
     int a, b;
     double d;
     cout<<"Enter the values of a, b, and d: ";
     cin>>a>>b>>d;
     cout<<endl<<"You entered: a = "<<a<<", b = "<<b<<", d = "<<d<<endl;
-    cout<<endl<<"Master Theorem Analysis"<<endl;
     cout<<"------------------------"<<endl;
+    recurrenceTreeExpansion(a, b, d);
     masterTheorem(a, b, d);
     cout<<endl<<"Press any key to exit..."<<endl;
     getch();
