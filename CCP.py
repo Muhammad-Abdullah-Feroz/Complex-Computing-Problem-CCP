@@ -58,20 +58,20 @@ def master_theorem_solver():
         log_b_a = math.log(a, b)
 
         print(f"\nAnalyzing T(n) = {a}T(n/{b}) + f(n) where f(n) = {f_str}")
-        print(f"Computed: log_b(a) = log_{b}({a}) = {log_b_a:.2f}, d = {d}")
+        # print(f"Computed: log_b(a) = log_{b}({a}) = {log_b_a:.2f}, d = {d}")
 
         # Master Theorem Decision
         if d < log_b_a:
-            print("=> Case 1 applies: f(n) is polynomially smaller than n^log_b(a)")
+            # print("=> Case 1 applies: f(n) is polynomially smaller than n^log_b(a)")
             print("=> T(n) = Θ(n^{:.2f})".format(log_b_a))
         elif d == log_b_a:
-            print("=> Case 2 applies: f(n) = Θ(n^log_b(a))")
+            # print("=> Case 2 applies: f(n) = Θ(n^log_b(a))")
             if log_part:
                 print("=> T(n) = Θ(n^{:.2f} log n)".format(d))
             else:
                 print("=> T(n) = Θ(n^{:.2f} log n)".format(d))
         else:
-            print("=> Case 3 applies: f(n) is polynomially larger than n^log_b(a)")
+            # print("=> Case 3 applies: f(n) is polynomially larger than n^log_b(a)")
             print("=> T(n) = Θ(f(n)) = Θ({})".format(f_str))
 
     except Exception as e:
@@ -113,9 +113,9 @@ def recursion_tree_solver():
             explanation = "Function form not recognized."
         
         print(f"\nAnalyzing T(n) = T(n - {k}) + f(n), where f(n) = {f_str}")
-        print(f"Using Recursion Tree with {k}-step decrease")
+        # print(f"Using Recursion Tree with {k}-step decrease")
         print(f"=> Estimated Time Complexity: {growth}")
-        print(f"=> Reasoning: {explanation}")
+        # print(f"=> Reasoning: {explanation}")
 
     except Exception as e:
         print("Error:", str(e))
@@ -136,17 +136,17 @@ def linear_homogeneous_solver():
         r = sp.symbols('r')
         poly = r**n - sum(coeffs[i] * r**(n - i - 1) for i in range(n))
 
-        print(f"\nCharacteristic Equation: {poly} = 0")
+        # print(f"\nCharacteristic Equation: {poly} = 0")
 
         # Solve the equation for roots
         roots = sp.solve(poly, r)
         roots_sorted = sorted(roots, key=lambda x: abs(sp.N(x)), reverse=True)
 
-        print(f"Roots: {roots}")
+        # print(f"Roots: {roots}")
         dominant_root = roots_sorted[0]
         abs_root_val = abs(sp.N(dominant_root))
 
-        print(f"\nDominant Root (by magnitude): {dominant_root} ≈ {abs_root_val:.4f}")
+        # print(f"\nDominant Root (by magnitude): {dominant_root} ≈ {abs_root_val:.4f}")
         print(f"Time Complexity: Θ({abs_root_val:.4f}ⁿ)")
 
     except Exception as e:
@@ -214,9 +214,9 @@ def linear_nonhomogeneous_solver():
         final_growth = max(dominant_root, f_growth)
 
         print(f"\nHomogeneous Characteristic Equation: {poly} = 0")
-        print(f"Roots: {roots}")
-        print(f"Dominant Root (Homogeneous): {dominant_root:.4f}")
-        print(f"f(n): {f_str} → {f_class}")
+        # print(f"Roots: {roots}")
+        # print(f"Dominant Root (Homogeneous): {dominant_root:.4f}")
+        # print(f"f(n): {f_str} → {f_class}")
         print(f"\nFinal Time Complexity: Θ({final_growth:.4f}ⁿ)")
 
     except Exception as e:
@@ -250,8 +250,8 @@ def multiple_custom_recursive_solver():
         prev_calls = count_custom_calls(n - 1, a, b)
         growth_rate = calls / prev_calls if prev_calls != 0 else 1
 
-        print(f"\nTotal Recursive Calls at T({n}) ≈ {calls}")
-        print(f"Estimated Growth Rate: {growth_rate:.4f}")
+        # print(f"\nTotal Recursive Calls at T({n}) ≈ {calls}")
+        # print(f"Estimated Growth Rate: {growth_rate:.4f}")
         print(f"Estimated Time Complexity: Θ({growth_rate:.2f}ⁿ)")
 
     except Exception as e:
@@ -321,7 +321,7 @@ def solve_multiple_subproblem_recurrence():
         d = max(log_term1, log_term2)  # Dominant work from subproblems
 
         print(f"\nT(n) = {a1}T(n/{b1}) + {a2}T(n/{b2}) + {fn_expr}")
-        print(f"Comparing f(n) = {fn_expr} with n^{d.evalf():.2f}")
+        # print(f"Comparing f(n) = {fn_expr} with n^{d.evalf():.2f}")
 
         # Compare growth rates
         fn_leading = sp.limit(f_n/ n**d, n,sp.oo)
@@ -348,7 +348,7 @@ def general_exponential_solver():
         
         if c > 1:  
             print(f"The recurrence is of the form T(n) = {a}T(n/{b}) + {c}^n")
-            print(f"Since the recurrence has an exponential term {c}^n, the time complexity is dominated by the exponential term.")
+            # print(f"Since the recurrence has an exponential term {c}^n, the time complexity is dominated by the exponential term.")
             print(f"Time Complexity: O({c}^n)")
         else:
             print("The recurrence does not fit the typical exponential form.")
