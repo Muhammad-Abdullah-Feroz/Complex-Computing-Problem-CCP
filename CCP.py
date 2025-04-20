@@ -7,21 +7,22 @@ def show_menu():
     print("Choose the type of recurrence to solve:")
     print("1. Divide and Conquer (T(n) = aT(n/b) + f(n))")
     print("2. Decrease and Conquer (T(n) = T(n - k) + f(n))")
-    print("3. Linear Homogeneous (e.g., T(n) = aT(n-1) + bT(n-2))")
-    print("4. Linear Non-Homogeneous (e.g., T(n) = aT(n-1) + f(n))")
-    print("5. Multiple Recurrence (e.g., T(n) = T(n-1) + T(n-3))")
+    print("3. Linear Homogeneous (e.g., T(n) = a₁T(n-1) + a₂T(n-2) + ... + aₖT(n-k))")
+    print("4. Linear Non-Homogeneous (e.g., T(n) = a₁T(n-1) + a₂T(n-2) + ... + aₖT(n-k) + f(n))")
+    print("5. Multiple Recurrence (e.g., T(n) = T(n-a) + T(n-b))")
     print("6. Nonlinear Recurrence (e.g., T(n) = T(n-1)^2 + 1)")
     print("7. Exponential Recurrence (e.g., T(n) = aT(n/b) + c^n)")
+    print("8. Multiple Subproblems Recurrence (e.g., T(n) = aT(n/b) + a'T(n/b') + f(n)")
     print("0. Exit")
 
 def get_user_choice():
     while True:
         try:
-            choice = int(input("Enter your choice (0-7): "))
-            if 0 <= choice <= 7:
+            choice = int(input("Enter your choice (0-8): "))
+            if 0 <= choice <= 8:
                 return choice
             else:
-                print("Invalid choice. Please enter a number from 0 to 7.")
+                print("Invalid choice. Please enter a number from 0 to 8.")
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -259,7 +260,41 @@ def general_nonlinear_solver():
     except Exception as e:
         print("Error:", str(e))
 
+def solve_multiple_subproblem_recurrence():
+    print("\n--- Multiple Unequal Subproblem Recurrence Solver ---")
+    print("Form: T(n) = aT(n/b) + a'T(n/b') + f(n)")
+    
+    try:
+        # Inputs
+        a1 = int(input("Enter number of subproblems a from n/b : "))
+        a2 = int(input("Enter number of subproblems a' from n/b': "))
+        b1 = float(input("Enter value of b (first division factor): "))
+        b2 = float(input("Enter value of b' (second division factor): "))
+        fn_expr = input("Enter f(n) in terms of n (e.g., n, n**2, n*log(n)): ")
 
+        # Define n symbolically
+        n = sp.Symbol('n', positive=True)
+        f_n = sp.sympify(fn_expr)
+
+        # Compute exponents for comparison
+        log_term1 = sp.log(a1) / sp.log(b1) if a1 > 0 and b1 > 1 else 0
+        log_term2 = sp.log(a2) / sp.log(b2) if a2 > 0 and b2 > 1 else 0
+        d = max(log_term1, log_term2)  # Dominant work from subproblems
+
+        print(f"\nT(n) = {a1}T(n/{b1}) + {a2}T(n/{b2}) + {fn_expr}")
+        print(f"Comparing f(n) = {fn_expr} with n^{d.evalf():.2f}")
+
+        # Compare growth rates
+        fn_leading = sp.limit(f_n/ n**d, n,sp.oo)
+        if fn_leading == 0:
+            print("f(n) is smaller → Time Complexity: Θ(n^{:.2f})".format(float(d)))
+        elif fn_leading.is_number:
+            print("f(n) matches → Time Complexity: Θ(n^{:.2f} * log n)".format(float(d)))
+        else:
+            print(f"f(n) dominates → Time Complexity: Θ({fn_expr})")
+    
+    except Exception as e:
+        print("Error:", str(e))
 
 def general_exponential_solver():
     print("\n--- Exponential Recurrence Solver ---")
@@ -327,6 +362,10 @@ def main():
             os.system('cls')
             print("- Solving Exponential Recurrence...")
             general_exponential_solver()
+        elif choice == 8:
+            os.system('cls')
+            print("- Solving Multiple Subproblems Recurrence...")
+            solve_multiple_subproblem_recurrence()
         print("\n")
         print("=====================================\n")
         input("Press Enter to continue...")
