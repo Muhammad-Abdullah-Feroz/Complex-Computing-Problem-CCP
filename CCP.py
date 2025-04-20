@@ -81,23 +81,37 @@ def recursion_tree_solver():
     print("\n--- Recursion Tree Solver for Decrease and Conquer ---")
     try:
         k = int(input("Enter value of k (decrease by k): "))
-        f_str = input("Enter f(n) (e.g., 1, n, n^2): ").lower().replace(" ", "")
+        f_str = input("Enter f(n) (e.g., 1, n, n^2, log(n), n*log(n), 2^n): ").lower().replace(" ", "")
 
-        # Estimate function growth
-        if f_str == "1":
+        # Define symbol
+        n = sp.Symbol('n', positive=True)
+        f_n = sp.sympify(f_str.replace("^", "**"), locals={"n": n})
+
+        # Estimate function growth     
+        if f_n == 1:
             growth = "Θ(n)"
             explanation = "Each level costs 1, total levels = n/k ⇒ Θ(n)"
-        elif f_str == "n":
+        elif f_n.equals(n):
+            print("F_N == n")
             growth = "Θ(n^2)"
             explanation = "Costs: n + (n-1) + ... + 1 ⇒ Arithmetic Series ⇒ Θ(n²)"
-        elif "^" in f_str:
-            d = float(f_str.split("^")[1])
-            growth = f"Θ(n^{d + 1})"
-            explanation = f"Summing n^{d} over n levels ⇒ Θ(n^{d + 1})"
+        elif f_n.has(sp.log(n)):
+            growth = "Θ(n*log(n))"
+            explanation = "Each level costs log(n), total levels ≈ n ⇒ Θ(n log n)"
+        elif f_n.has(n) and f_n.has(sp.exp):  # rare, fallback
+            growth = "Θ(n*e^n)"
+            explanation = "Each level costs exp(n), dominates ⇒ Θ(n·e^n)"
+        elif f_n.has(n) and "^" in f_str or "**" in f_str:  # exponential cases like 2^n
+            growth = "Θ(2^n)"  # Approximate for standard base
+            explanation = "Costs double each level ⇒ Exponential ⇒ Θ(2^n)"
+        elif f_n.is_polynomial(n):
+            degree = sp.degree(f_n, n)
+            growth = f"Θ(n^{degree + 1})"
+            explanation = f"Summing n^{degree} over n levels ⇒ Θ(n^{degree + 1})"
         else:
-            print("Unsupported or unclear f(n) format.")
-            return
-
+            growth = "Unknown"
+            explanation = "Function form not recognized."
+        
         print(f"\nAnalyzing T(n) = T(n - {k}) + f(n), where f(n) = {f_str}")
         print(f"Using Recursion Tree with {k}-step decrease")
         print(f"=> Estimated Time Complexity: {growth}")
@@ -105,6 +119,7 @@ def recursion_tree_solver():
 
     except Exception as e:
         print("Error:", str(e))
+
 
 def linear_homogeneous_solver():
     print("\n--- Linear Homogeneous Recurrence Solver ---")
@@ -136,42 +151,65 @@ def linear_homogeneous_solver():
 
     except Exception as e:
         print("Error:", str(e))
-
+        
 def linear_nonhomogeneous_solver():
     print("\n--- Linear Non-Homogeneous Recurrence Solver ---")
     try:
-        n = int(input("Enter the order of recurrence: "))
+        n_order = int(input("Enter the order of recurrence: "))
         coeffs = []
         print("Enter coefficients a₁ to aₙ for: T(n) = a₁·T(n-1) + ... + aₙ·T(n-k) + f(n)")
 
-        for i in range(1, n+1):
+        for i in range(1, n_order + 1):
             c = int(input(f"Coefficient a{i}: "))
             coeffs.append(c)
 
-        f_str = input("Enter f(n) (e.g. 1, n, 2^n): ").replace(" ", "").lower()
+        f_str = input("Enter f(n) (e.g. 1, n, n^2, log(n), n*log(n), 2^n): ").replace(" ", "").lower()
+
+        # Symbols
+        n = sp.Symbol('n', positive=True)
+        r = sp.Symbol('r')
+        f_n = sp.sympify(f_str.replace("^", "**") , locals={"n": n, "r": r})
 
         # Solve homogeneous part
-        r = sp.symbols('r')
-        poly = r**n - sum(coeffs[i] * r**(n - i - 1) for i in range(n))
+        poly = r**n_order - sum(coeffs[i] * r**(n_order - i - 1) for i in range(n_order))
         roots = sp.solve(poly, r)
         roots_sorted = sorted(roots, key=lambda x: abs(sp.N(x)), reverse=True)
         dominant_root = abs(sp.N(roots_sorted[0]))
 
-        # Determine f(n) class and growth rate
+        # Determine class of f(n)
         f_growth = 0
-        if f_str == "1":
+        if f_n == 1:
             f_class = "constant ⇒ Tₚ(n) = A"
-            f_growth = 1  # Θ(1)
-        elif f_str == "n":
+            f_growth = 1
+        elif f_n == n:
             f_class = "linear ⇒ Tₚ(n) = An + B"
-            f_growth = 1.0001  # Slightly more than constant to compare
-        elif "^" in f_str and f_str[0].isdigit():
-            base = float(f_str.split("^")[0])
-            f_class = f"exponential ⇒ Tₚ(n) = A·{base}ⁿ"
-            f_growth = base
+            f_growth = 1.0001
+        elif f_n.is_polynomial(n):
+            degree = sp.degree(f_n, n)
+            f_class = f"polynomial ⇒ Tₚ(n) = A·n^{degree}"
+            f_growth = degree + 0.1
+        elif f_n.has(sp.log(n)):
+            if f_n.has(n):
+                f_class = "polylogarithmic ⇒ Tₚ(n) = A·n·log(n)"
+                f_growth = 1.5  # Estimated complexity level
+            else:
+                f_class = "logarithmic ⇒ Tₚ(n) = A·log(n)"
+                f_growth = 1.2
+        elif f_n.is_Pow and f_n.base == sp.S.Exp1:  # e^n
+            f_class = "exponential ⇒ Tₚ(n) = A·e^n"
+            f_growth = sp.N(sp.E)
+        elif f_n.has(n) and ("**" in f_str or "^" in f_str):
+            base_candidate = f_n.as_base_exp()[0]
+            if base_candidate.is_number:
+                base = float(base_candidate)
+                f_class = f"exponential ⇒ Tₚ(n) = A·{base}ⁿ"
+                f_growth = base
+            else:
+                f_class = "general exponential"
+                f_growth = 2  # fallback
         else:
-            print("Unsupported f(n) format for this solver.")
-            return
+            f_class = "unknown/complex"
+            f_growth = dominant_root
 
         final_growth = max(dominant_root, f_growth)
 
@@ -183,6 +221,7 @@ def linear_nonhomogeneous_solver():
 
     except Exception as e:
         print("Error:", str(e))
+
 
 def count_custom_calls(n, a, b, memo=None):
     if memo is None:
