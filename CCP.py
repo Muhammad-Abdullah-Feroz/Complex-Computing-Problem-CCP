@@ -11,18 +11,19 @@ def show_menu():
     print("4. Linear Non-Homogeneous (e.g., T(n) = aT(n-1) + f(n))")
     print("5. Multiple Recurrence (e.g., T(n) = T(n-1) + T(n-3))")
     print("6. Nonlinear Recurrence (e.g., T(n) = T(n-1)^2 + 1)")
+    print("7. Exponential Recurrence (e.g., T(n) = aT(n/b) + c^n)")
     print("0. Exit")
 
 def get_user_choice():
     while True:
         try:
-            choice = int(input("Enter your choice (0-6): "))
-            if 0 <= choice <= 6:
+            choice = int(input("Enter your choice (0-7): "))
+            if 0 <= choice <= 7:
                 return choice
             else:
-                print("❌ Invalid choice. Please enter a number from 0 to 6.")
+                print("Invalid choice. Please enter a number from 0 to 7.")
         except ValueError:
-            print("❌ Invalid input. Please enter a number.")
+            print("Invalid input. Please enter a number.")
 
 
 def master_theorem_solver():
@@ -50,7 +51,7 @@ def master_theorem_solver():
             d = 0
             log_part = ""
         else:
-            print("❌ Unsupported or unclear f(n) format.")
+            print("Unsupported or unclear f(n) format.")
             return
 
         log_b_a = math.log(a, b)
@@ -73,7 +74,7 @@ def master_theorem_solver():
             print("=> T(n) = Θ(f(n)) = Θ({})".format(f_str))
 
     except Exception as e:
-        print("❌ Error:", str(e))
+        print("Error:", str(e))
 
 def recursion_tree_solver():
     print("\n--- Recursion Tree Solver for Decrease and Conquer ---")
@@ -93,7 +94,7 @@ def recursion_tree_solver():
             growth = f"Θ(n^{d + 1})"
             explanation = f"Summing n^{d} over n levels ⇒ Θ(n^{d + 1})"
         else:
-            print("❌ Unsupported or unclear f(n) format.")
+            print("Unsupported or unclear f(n) format.")
             return
 
         print(f"\nAnalyzing T(n) = T(n - {k}) + f(n), where f(n) = {f_str}")
@@ -102,7 +103,7 @@ def recursion_tree_solver():
         print(f"=> Reasoning: {explanation}")
 
     except Exception as e:
-        print("❌ Error:", str(e))
+        print("Error:", str(e))
 
 def linear_homogeneous_solver():
     print("\n--- Linear Homogeneous Recurrence Solver ---")
@@ -130,10 +131,10 @@ def linear_homogeneous_solver():
         abs_root_val = abs(sp.N(dominant_root))
 
         print(f"\nDominant Root (by magnitude): {dominant_root} ≈ {abs_root_val:.4f}")
-        print(f"✅ Time Complexity: Θ({abs_root_val:.4f}ⁿ)")
+        print(f"Time Complexity: Θ({abs_root_val:.4f}ⁿ)")
 
     except Exception as e:
-        print("❌ Error:", str(e))
+        print("Error:", str(e))
 
 def linear_nonhomogeneous_solver():
     print("\n--- Linear Non-Homogeneous Recurrence Solver ---")
@@ -168,7 +169,7 @@ def linear_nonhomogeneous_solver():
             f_class = f"exponential ⇒ Tₚ(n) = A·{base}ⁿ"
             f_growth = base
         else:
-            print("❌ Unsupported f(n) format for this solver.")
+            print("Unsupported f(n) format for this solver.")
             return
 
         final_growth = max(dominant_root, f_growth)
@@ -177,10 +178,10 @@ def linear_nonhomogeneous_solver():
         print(f"Roots: {roots}")
         print(f"Dominant Root (Homogeneous): {dominant_root:.4f}")
         print(f"f(n): {f_str} → {f_class}")
-        print(f"\n✅ Final Time Complexity: Θ({final_growth:.4f}ⁿ)")
+        print(f"\nFinal Time Complexity: Θ({final_growth:.4f}ⁿ)")
 
     except Exception as e:
-        print("❌ Error:", str(e))
+        print("Error:", str(e))
 
 def count_custom_calls(n, a, b, memo=None):
     if memo is None:
@@ -202,19 +203,19 @@ def multiple_custom_recursive_solver():
         b = int(input("Enter b (positive integer): "))
 
         if a <= 0 or b <= 0:
-            print("❌ 'a' and 'b' must be positive integers.")
+            print("'a' and 'b' must be positive integers.")
             return
 
         calls = count_custom_calls(n, a, b)
         prev_calls = count_custom_calls(n - 1, a, b)
         growth_rate = calls / prev_calls if prev_calls != 0 else 1
 
-        print(f"\n🔢 Total Recursive Calls at T({n}) ≈ {calls}")
-        print(f"📈 Estimated Growth Rate: {growth_rate:.4f}")
-        print(f"✅ Estimated Time Complexity: Θ({growth_rate:.2f}ⁿ)")
+        print(f"\nTotal Recursive Calls at T({n}) ≈ {calls}")
+        print(f"Estimated Growth Rate: {growth_rate:.4f}")
+        print(f"Estimated Time Complexity: Θ({growth_rate:.2f}ⁿ)")
 
     except Exception as e:
-        print("❌ Error:", str(e))
+        print("Error:", str(e))
 
 def general_nonlinear_solver():
     print("\n--- General Nonlinear Recurrence Solver ---")
@@ -241,24 +242,48 @@ def general_nonlinear_solver():
 
         growth_rate = T[max_n] / T[max_n - 1] if T.get(max_n - 1) else None
         if growth_rate:
-            print(f"\n📈 Approx. Growth Rate: {growth_rate:.2f}")
+            print(f"\nApprox. Growth Rate: {growth_rate:.2f}")
         else:
-            print("\n⚠️ Could not estimate growth rate.")
+            print("\nCould not estimate growth rate.")
 
         # Estimate growth class
         if T[max_n] > 10**6:
-            print("✅ Estimated Time Complexity: Super-Exponential (possibly Θ(2^(2^n)))")
+            print("Estimated Time Complexity: Super-Exponential (possibly Θ(2^(2^n)))")
         elif growth_rate and growth_rate > 5:
-            print("✅ Estimated Time Complexity: Exponential")
+            print("Estimated Time Complexity: Exponential")
         elif growth_rate and growth_rate > 1:
-            print("✅ Estimated Time Complexity: Polynomial or Super-Polynomial")
+            print("Estimated Time Complexity: Polynomial or Super-Polynomial")
         else:
-            print("✅ Estimated Time Complexity: Logarithmic or Constant")
+            print("Estimated Time Complexity: Logarithmic or Constant")
 
     except Exception as e:
-        print("❌ Error:", str(e))
+        print("Error:", str(e))
 
 
+
+def general_exponential_solver():
+    print("\n--- Exponential Recurrence Solver ---")
+    
+    try:
+        # Input the recurrence parameters
+        a = int(input("Enter the 'a' (constant multiplier for recursive term): "))
+        b = int(input("Enter the 'b' (input size reduction factor): "))
+        c = float(input("Enter the 'c' (base of the exponential term, e.g., 2 for 2^n): "))
+        
+        # n = int(input("Enter the value for 'n' (size of input to calculate recurrence for): "))
+        
+        if c > 1:  
+            print(f"The recurrence is of the form T(n) = {a}T(n/{b}) + {c}^n")
+            print(f"Since the recurrence has an exponential term {c}^n, the time complexity is dominated by the exponential term.")
+            print(f"Time Complexity: O({c}^n)")
+        else:
+            print("The recurrence does not fit the typical exponential form.")
+            print("Could not determine time complexity.")
+            
+        # Solve using the exponential recurrence solver
+    
+    except Exception as e:
+        print("Error:", str(e))
 
 
 
@@ -272,32 +297,36 @@ def main():
 
         if choice == 0:
             os.system('cls')
-            print("👋 Exiting Recurrence Solver. Goodbye!")
+            print("Exiting Recurrence Solver. Goodbye!")
             break
         elif choice == 1:
             os.system('cls')
-            print("➡ Solving Divide and Conquer recurrence...")
+            print("- Solving Divide and Conquer recurrence...")
             master_theorem_solver()
         elif choice == 2:
             os.system('cls')
-            print("➡ Solving Decrease and Conquer recurrence...")
+            print("- Solving Decrease and Conquer recurrence...")
             recursion_tree_solver()
         elif choice == 3:
             os.system('cls')
-            print("➡ Solving Linear Homogeneous recurrence...")
+            print("- Solving Linear Homogeneous recurrence...")
             linear_homogeneous_solver()
         elif choice == 4:
             os.system('cls')
-            print("➡ Solving Linear Non-Homogeneous recurrence...")
+            print("- Solving Linear Non-Homogeneous recurrence...")
             linear_nonhomogeneous_solver()
         elif choice == 5:
             os.system('cls')
-            print("➡ Solving Multiple Recurrence...")
+            print("- Solving Multiple Recurrence...")
             multiple_custom_recursive_solver()
         elif choice == 6:
             os.system('cls')
-            print("➡ Solving Nonlinear Recurrence...")
+            print("- Solving Nonlinear Recurrence...")
             general_nonlinear_solver()
+        elif choice == 7:
+            os.system('cls')
+            print("- Solving Exponential Recurrence...")
+            general_exponential_solver()
         print("\n")
         print("=====================================\n")
         input("Press Enter to continue...")
